@@ -108,7 +108,7 @@ enum
 
 #define rsiFDefault  -1
 
-#ifndef APTR_TYPEDEF
+#if !defined(__AROS__) && !defined(APTR_TYPEDEF)
 typedef int BOOL;
 typedef unsigned char UBYTE;
 #endif
@@ -155,11 +155,11 @@ typedef struct
 
 typedef void rsiCONTEXT;
 
-enum rsiSYSTEM
+typedef enum rsiSYSTEM
 {
 	rsiSYSTEM_M68K,
 	rsiSYSTEM_PPC_WarpOS
-};
+} rsiSYSTEM;
 
 typedef struct
 {
@@ -220,12 +220,14 @@ extern "C"
 {
 #endif
 
+
 /* set callback functions */
 rsiResult rsiSetCooperateCB(rsiCONTEXT*, void (*)(void*));
 rsiResult rsiSetCheckCancelCB(rsiCONTEXT*, BOOL (*)(void*));
 rsiResult rsiSetLogCB(rsiCONTEXT*, void (*)(void*, char *));
 rsiResult rsiSetUpdateStatusCB(rsiCONTEXT*, void (*)(void*, float, float, int, int, rsiSMALL_COLOR*));
 
+#if !defined(__AROS__)
 /* general commands */
 rsiResult rsiGetLibInfo(rsiLIBINFO*);
 rsiResult rsiInit();
@@ -300,6 +302,7 @@ rsiResult rsiSetActor(rsiCONTEXT*, void *, ...);
 rsiResult rsiPosition(rsiCONTEXT*, void *, float, float, rsiVECTOR *, ...);
 rsiResult rsiAlignment(rsiCONTEXT*, void *, float, float, rsiVECTOR *, ...);
 rsiResult rsiSize(rsiCONTEXT*, void *, float, float, rsiVECTOR *, ...);
+#endif
 
 #ifdef __cplusplus
 }

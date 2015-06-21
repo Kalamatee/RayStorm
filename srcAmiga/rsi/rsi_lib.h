@@ -30,6 +30,9 @@
 #define RAYSTORMNAME   "raystorm.library"
 #endif
 
+#if defined(__AROS__)
+#include <proto/raystorm.h>
+#else
 #ifdef __PPC__
 
 #define LIBRARY
@@ -129,5 +132,6 @@ extern "Amiga" RayStormBase
 	rsiResult rsiGetStats(LIBRARY void*, rsiSTAT **, int *) LIB_OFFSET(-0x1b0);
 	rsiResult rsiGetStatDescription(LIBRARY void*, rsiSTAT *, char *, int) LIB_OFFSET(-0x1b6);
 }
+#endif /* !__AROS__ */
 
 #endif
