@@ -158,7 +158,12 @@ typedef void rsiCONTEXT;
 typedef enum rsiSYSTEM
 {
 	rsiSYSTEM_M68K,
-	rsiSYSTEM_PPC_WarpOS
+	rsiSYSTEM_PPC_WarpOS,
+    	rsiSYSTEM_M68K_AROS,
+	rsiSYSTEM_PPC_AROS,
+	rsiSYSTEM_X86_AROS,
+    	rsiSYSTEM_X86_64_AROS,
+    	rsiSYSTEM_ARM_AROS
 } rsiSYSTEM;
 
 typedef struct
