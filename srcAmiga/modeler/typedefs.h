@@ -14,6 +14,12 @@
 
 #include <exec/types.h>
 
+#if defined(__AROS__)
+#define REG(x) 
+#define ASM
+#define SAVEDS
+#define WARPOS_PPC_FUNC(a) a
+#else
 #ifdef __PPC__
 #define REG(x)
 #define ASM
@@ -29,5 +35,5 @@
 #define SAVEDS
 #define WARPOS_PPC_FUNC(a) a
 #endif
-
+#endif
 #endif
