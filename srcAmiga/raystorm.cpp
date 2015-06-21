@@ -67,6 +67,15 @@
 // Add to get debugging messages
 //#define DEBUG
 
+#if defined(__AROS__)
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/muimaster.h>
+#include <proto/alib.h>
+#define __DATE2__ "21.06.2015"
+#endif
+
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
@@ -197,6 +206,7 @@ static struct Hook hooks[] =
 static struct Hook hooks[] =
 #endif
 {
+#if !defined(__AROS__)
 	{{NULL, NULL},(HOOKFUNC)f_triangle,NULL,NULL},
 	{{NULL, NULL},(HOOKFUNC)f_newsurface,NULL,NULL},
 	{{NULL, NULL},(HOOKFUNC)f_sphere,NULL,NULL},
@@ -248,6 +258,59 @@ static struct Hook hooks[] =
 	{{NULL, NULL},(HOOKFUNC)f_size,NULL,NULL},
 	{{NULL, NULL},(HOOKFUNC)f_distrib,NULL,NULL},
 	{{NULL, NULL},(HOOKFUNC)f_geterrorstr,NULL,NULL},
+#else
+	{{NULL, NULL},(APTR)f_triangle,NULL,NULL},
+	{{NULL, NULL},(APTR)f_newsurface,NULL,NULL},
+	{{NULL, NULL},(APTR)f_sphere,NULL,NULL},
+	{{NULL, NULL},(APTR)f_plane,NULL,NULL},
+	{{NULL, NULL},(APTR)f_box,NULL,NULL},
+	{{NULL, NULL},(APTR)f_cylinder,NULL,NULL},
+	{{NULL, NULL},(APTR)f_sor,NULL,NULL},
+	{{NULL, NULL},(APTR)f_cone,NULL,NULL},
+	{{NULL, NULL},(APTR)f_csg,NULL,NULL},
+	{{NULL, NULL},(APTR)f_pointlight,NULL,NULL},
+	{{NULL, NULL},(APTR)f_spotlight,NULL,NULL},
+	{{NULL, NULL},(APTR)f_directionallight,NULL,NULL},
+	{{NULL, NULL},(APTR)f_flare,NULL,NULL},
+	{{NULL, NULL},(APTR)f_star,NULL,NULL},
+	{{NULL, NULL},(APTR)f_loadobj,NULL,NULL},
+	{{NULL, NULL},(APTR)f_ambient,NULL,NULL},
+	{{NULL, NULL},(APTR)f_diffuse,NULL,NULL},
+	{{NULL, NULL},(APTR)f_foglen,NULL,NULL},
+	{{NULL, NULL},(APTR)f_specular,NULL,NULL},
+	{{NULL, NULL},(APTR)f_difftrans,NULL,NULL},
+	{{NULL, NULL},(APTR)f_spectrans,NULL,NULL},
+	{{NULL, NULL},(APTR)f_refexp,NULL,NULL},
+	{{NULL, NULL},(APTR)f_transexp,NULL,NULL},
+	{{NULL, NULL},(APTR)f_refrindex,NULL,NULL},
+	{{NULL, NULL},(APTR)f_reflect,NULL,NULL},
+	{{NULL, NULL},(APTR)f_transpar,NULL,NULL},
+	{{NULL, NULL},(APTR)f_transluc,NULL,NULL},
+	{{NULL, NULL},(APTR)f_imtexture,NULL,NULL},
+	{{NULL, NULL},(APTR)f_hypertexture,NULL,NULL},
+	{{NULL, NULL},(APTR)f_brush,NULL,NULL},
+	{{NULL, NULL},(APTR)f_setcamera,NULL,NULL},
+	{{NULL, NULL},(APTR)f_setscreen,NULL,NULL},
+	{{NULL, NULL},(APTR)f_setworld,NULL,NULL},
+	{{NULL, NULL},(APTR)f_savepic,NULL,NULL},
+#ifdef QUANT
+	{{NULL, NULL},(APTR)f_display,NULL,NULL},
+#endif
+	{{NULL, NULL},(APTR)f_cleanup,NULL,NULL},
+	{{NULL, NULL},(APTR)f_startrender,NULL,NULL},
+	{{NULL, NULL},(APTR)f_quit,NULL,NULL},
+	{{NULL, NULL},(APTR)f_antialias,NULL,NULL},
+	{{NULL, NULL},(APTR)f_wintofront,NULL,NULL},
+	{{NULL, NULL},(APTR)f_brushpath,NULL,NULL},
+	{{NULL, NULL},(APTR)f_texturepath,NULL,NULL},
+	{{NULL, NULL},(APTR)f_objectpath,NULL,NULL},
+	{{NULL, NULL},(APTR)f_alignment,NULL,NULL},
+	{{NULL, NULL},(APTR)f_newactor,NULL,NULL},
+	{{NULL, NULL},(APTR)f_position,NULL,NULL},
+	{{NULL, NULL},(APTR)f_size,NULL,NULL},
+	{{NULL, NULL},(APTR)f_distrib,NULL,NULL},
+	{{NULL, NULL},(APTR)f_geterrorstr,NULL,NULL},
+#endif
 };
 
 enum cmds
@@ -327,6 +390,7 @@ extern char buffer[];
 // Application errors
 extern char *app_errors[];
 
+#if !defined(__AROS__)
 #ifndef __STORM__
 Object *MUI_NewObject(char *classname, Tag tag1, ...)
 {
@@ -337,6 +401,7 @@ Object *MUI_MakeObject(LONG type, ...)
 {
 	return(MUI_MakeObjectA(type, (ULONG *)(((ULONG)&type)+4)));
 }
+#endif
 #endif
 
 /*************
@@ -357,9 +422,15 @@ BOOL open_error_request(unsigned char *text)
 		{
 			sizeof(struct EasyStruct),
 			0,
+#if !defined(__AROS__)
 			&vers[7],
 			text,
-			(unsigned char*)"OK",
+			(CONST_STRPTR)"OK",
+#else
+			(CONST_STRPTR)&vers[7],
+			(CONST_STRPTR)text,
+			(CONST_STRPTR)"OK",
+#endif
 		};
 
 		if(ObjApp.win)
@@ -379,7 +450,7 @@ BOOL open_error_request(unsigned char *text)
  *************/
 void WriteLog(rsiCONTEXT *rc, char *text)
 {
-	ULONG entrie;
+	IPTR entrie = 0;
 
 	GetAttr(MUIA_List_Entries, (Object*)ObjApp.log, &entrie);
 	if(entrie>50)
@@ -404,13 +475,13 @@ void UpdateStatus(rsiCONTEXT *rc, float percent, float elapsed, int y, int lines
 {
 	float end;
 
-	SetAttrs((Object *)ObjApp.perc,MUIA_Gauge_Current,(ULONG)(percent*65535.f), TAG_DONE);
+	SetAttrs((Object *)ObjApp.perc,MUIA_Gauge_Current,(IPTR)(percent*65535.f), TAG_DONE);
 
 	sprintf(buffer, "Time spend: %02d:%02d:%02d",
 		(int)floor(elapsed/3600.f),
 		(int)floor(elapsed/60.f) % 60,
 		(int)floor(elapsed) % 60);
-	SetAttrs((Object *)ObjApp.tspend,MUIA_Text_Contents,(ULONG)buffer, TAG_DONE);
+	SetAttrs((Object *)ObjApp.tspend,MUIA_Text_Contents,(IPTR)buffer, TAG_DONE);
 
 	if(percent > 0.f)
 		end = elapsed / percent;
@@ -421,7 +492,7 @@ void UpdateStatus(rsiCONTEXT *rc, float percent, float elapsed, int y, int lines
 		(int)floor(end/3600.f),
 		(int)floor(end/60.f) % 60,
 		(int)floor(end) % 60);
-	SetAttrs((Object *)ObjApp.testimated,MUIA_Text_Contents,(ULONG)buffer, TAG_DONE);
+	SetAttrs((Object *)ObjApp.testimated,MUIA_Text_Contents,(IPTR)buffer, TAG_DONE);
 
 	end = (1.f - percent) * end;
 
@@ -429,7 +500,7 @@ void UpdateStatus(rsiCONTEXT *rc, float percent, float elapsed, int y, int lines
 		(int)floor(end/3600.f),
 		(int)floor(end/60.f) % 60,
 		(int)floor(end) % 60);
-	SetAttrs((Object *)ObjApp.tleft,MUIA_Text_Contents,(ULONG)buffer, TAG_DONE);
+	SetAttrs((Object *)ObjApp.tleft,MUIA_Text_Contents,(IPTR)buffer, TAG_DONE);
 }
 
 /*************
@@ -439,7 +510,7 @@ void UpdateStatus(rsiCONTEXT *rc, float percent, float elapsed, int y, int lines
  *************/
 BOOL CheckCancel(rsiCONTEXT *rc)
 {
-	ULONG pressed;
+	IPTR pressed;
 
 	GetAttr(MUIA_Selected, (Object*)ObjApp.cancel, &pressed);
 	return pressed;
@@ -469,17 +540,17 @@ static ULONG Init()
 	ULONG sernum;
 
 	// Open intuition library.
-	IntuitionBase = (struct IntuitionBase*)OpenLibrary((unsigned char*)"intuition.library",37L);
+	IntuitionBase = (struct IntuitionBase*)OpenLibrary((CONST_STRPTR)"intuition.library",37L);
 	if (!IntuitionBase)
 		return ERROR_INTUITIONLIB;
 
 	// Open muimaster library.
-	MUIMasterBase = OpenLibrary((unsigned char*)MUIMASTER_NAME,10);/*MUIMASTER_VMIN);*/
+	MUIMasterBase = OpenLibrary((CONST_STRPTR)MUIMASTER_NAME,10);/*MUIMASTER_VMIN);*/
 	if (!MUIMasterBase)
 		return ERROR_MUIMASTERLIB;
 
 	// Open keyfile library.
-	KeyfileBase = OpenLibrary("s:RayStorm.key",0);
+	KeyfileBase = OpenLibrary((CONST_STRPTR)"s:RayStorm.key",0);
 	if(KeyfileBase)
 	{
 		keyGetInfo(name, &sernum);
@@ -650,32 +721,44 @@ static void display(const BOOL floyd)
 }
 #endif
 
-void main(void)
+#if !defined(__AROS__)
+VOID main(void)
+#else
+int main(void)
+#endif
 {
-	char *err;
+	unsigned char *err;
 	ULONG error;
 	BOOL done = FALSE;
-	ULONG signals,id;
+	IPTR signals,id;
 
-	err = InitInterface();
+	err = (unsigned char *)InitInterface();
 	if(err)
 	{
 		open_error_request(err);
+#if !defined(__AROS__)
 		exit(1);
+#else
+                return 1;
+#endif
 	}
 
 	// Open window and libs
 	error = Init();
 	if(error)
 	{
-		open_error_request(app_errors[error-100]);
+		open_error_request((unsigned char *)app_errors[error-100]);
 		Cleanup();
+#if !defined(__AROS__)
 		exit(1);
+#else
+                return 1;
+#endif
 	}
 
 	while(!done)
 	{
-		id = DoMethod((Object *)ObjApp.app,MUIM_Application_Input,&signals);
+		id = DoMethod((Object *)ObjApp.app, MUIM_Application_Input, &signals);
 		switch (id)
 		{
 			case MUIV_Application_ReturnID_Quit:
@@ -687,7 +770,11 @@ void main(void)
 	}
 	Cleanup();
 	CleanupInterface();
-	exit(0);
+#if !defined(__AROS__)
+        exit(0);
+#else
+        return 0;
+#endif
 }
 
 #define FUNC(name) SAVEDS ASM ULONG f_ ## name (REG(a0) struct Hook *hook, \

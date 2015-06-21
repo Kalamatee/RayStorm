@@ -28,11 +28,9 @@ extern "C"
 }
 #endif
 
-#ifdef __AMIGA__
-#ifndef DEBUG_LIB
+#if defined(__AROS__) || (defined(__AMIGA__) && !defined(DEBUG_LIB))
 #ifndef RSI_LIB_H
 #include "rsi_lib.h"
-#endif
 #endif
 #endif
 

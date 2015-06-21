@@ -15,7 +15,11 @@
 #include <stdlib.h>
 #include <math.h>
 
+#if !defined(__AROS__)
 #include <clib/exec_protos.h>
+#else
+#include <proto/exec.h>
+#endif
 
 #ifndef TYPEDEFS_H
 #include "typedefs.h"

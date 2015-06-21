@@ -4,14 +4,20 @@ include $(TOP)/config/make.cfg
 
 #MM- local-raystorm : raystorm-mui
 #MM- raystorm-mui : raystorm-renderer raystorm-scenario
+#MM raystorm-renderer : raystorm-libraries-keyfile-includes raystorm-libraries-rsi-includes
 
-RAYSTORMFILES := \
+RAYSTORM_DIR := $(AROSDIR)/RayStorm
+
+RAYSTORM_FILES := \
 	raystorm \
+        interface \
         itemlist \
         csgstack
 
-USER_INCLUDES :=  -D__AMIGA__ -L$(AROS_LIB)/gcc/i386-aros/4.6.2 -I$(SRCDIR)/$(CURDIR)/keyfile -I$(SRCDIR)/$(CURDIR)/modeler  -I$(SRCDIR)/$(CURDIR)/rsi
+USER_INCLUDES :=  -I$(SRCDIR)/$(CURDIR)/keyfile -I$(SRCDIR)/$(CURDIR)/modeler  -I$(SRCDIR)/$(CURDIR)/rsi
 
 %build_prog mmake=raystorm-renderer \
-    progname=RayStorm targetdir=$(CONTRIBDIR)/Gfx/RayStorm files= cxxfiles="$(RAYSTORMFILES)" \
-    detach=yes uselibs="mui stdc++ posixc stdcio stdc"
+    progname=RayStorm targetdir=$(RAYSTORM_DIR) files= cxxfiles="$(RAYSTORM_FILES)" \
+    detach=yes uselibs="raystorm mui stdc++ pthread posixc stdcio stdc" \
+    includedir="$(GENDIR)/$(CURDIR)/include" \
+    libdir="$(GENDIR)/$(CURDIR)/lib"
