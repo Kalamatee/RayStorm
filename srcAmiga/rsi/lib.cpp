@@ -1,5 +1,5 @@
 
-#ifdef __AMIGA__
+#if defined(__AROS__) || defined(__AMIGA__)
 
 #include <pragma/exec_lib.h>
 #include <memory.h>
@@ -93,11 +93,30 @@ extern "ASM" unsigned long __saveds _68kStub_ppc_DoMethodA__PUjP00(register __a0
 
 rsiResult rsiGetLibInfo(rsiLIBINFO *info)
 {
+#if defined(__AROS__)
+#if defined(__i386__)
+	info->system = rsiSYSTEM_X86_AROS;
+#endif
+#if defined(__x86_64__)
+	info->system = rsiSYSTEM_X86_64_AROS;
+#endif
+#if defined(__PPC__)
+	info->system = rsiSYSTEM_PPC_AROS;
+#endif
+#if defined(__arm__)
+	info->system = rsiSYSTEM_ARM_AROS;
+#endif
+#if defined(__m68k__)
+	info->system = rsiSYSTEM_M68K_AROS;
+#endif
+#else
 #ifdef __MIXEDBINARY__
 	info->system = rsiSYSTEM_PPC_WarpOS;
 #else
 	info->system = rsiSYSTEM_M68K;
 #endif // !__MIXEDBINARY__
+#endif
+
 	return rsiERR_NONE;
 }
 
