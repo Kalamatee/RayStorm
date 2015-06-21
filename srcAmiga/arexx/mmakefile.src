@@ -1,0 +1,37 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- raystorm-mui : raystorm-arexx
+
+AREXX_FILES := \
+	attrtest.ray \
+	attrtest1.ray \
+	backdrop.ray \
+	bounce.ray \
+	brush.ray \
+	bump.ray \
+	checker.ray \
+	chess.ray \
+	coin.ray \
+	default.ray \
+	dof.ray \
+	dolphins.ray \
+	eight.ray \
+	fog.ray \
+	fog1.ray \
+	fractal.ray \
+	getname.ray \
+	im_texture.ray \
+	logo.ray \
+	marble.ray \
+	randomsph.ray \
+	simple.ray \
+	surface.ray \
+	sunflare.ray \
+	supersample.ray \
+	textures.ray \
+	wood.ray
+
+AREXXSTART_FILES := \
+	RayStorm_Start

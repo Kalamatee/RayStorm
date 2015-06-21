@@ -1,0 +1,33 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- raystorm-mui : raystorm-brushes
+
+BRUSH_FILES := \
+	BACK1.PNG \
+	BACK2.PNG \
+	BLEED.PNG \
+	CLOUDS.JPG \
+	EARTH.JPG \
+	earth.png \
+	earth_bump.iff \
+	earth_bump.png \
+	earth_bump_small.iff \
+	earth_refl.iff \
+	earth_refl.png \
+	EIGHT.PNG \
+	eight_brish.png \
+	FOUR.PNG \
+	logo.png \
+	logo_smooth.png \
+	MARS.JPG \
+	merry.png \
+	MOON.JPG \
+	NINE.PNG \
+	ONE.PNG \
+	ReflectionMap.iff \
+	ReflectionMap.png \
+	stars.png \
+	twirl_blue.png \
+	twirl_yellow.png
