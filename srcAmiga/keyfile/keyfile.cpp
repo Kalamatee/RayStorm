@@ -72,7 +72,7 @@ extern "C" BOOL keyDecodeKeyfile1()
 	int i, j;
 	ULONG r, c;
 
-#ifdef __AMIGA__
+#if defined(__AROS__) || defined(__AMIGA__)
 	if(!(user.flags & FLAGS_SYSTEM_AMIGA))
 #else
 	if(!(user.flags & FLAGS_SYSTEM_PC))

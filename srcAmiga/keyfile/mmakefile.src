@@ -1,0 +1,20 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- raystorm-libraries : raystorm-libraries-keyfile
+
+RAYSTORM_DIR := $(AROSDIR)/RayStorm
+RAYSTORM_LIBDIR := $(RAYSTORM_DIR)/Libs
+
+KEYFILE_FILES := \
+
+
+USER_LDFLAGS := -static
+
+%build_module mmake=raystorm-libraries-keyfile \
+  modname=keyfile modtype=library \
+  files="$(KEYFILE_FILES)" \
+  moduledir="$(RAYSTORM_LIBDIR)" \
+  includedir="$(GENDIR)/$(CURDIR)/../include" \
+  libdir="$(GENDIR)/$(CURDIR)/../lib"

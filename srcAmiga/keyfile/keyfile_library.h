@@ -18,6 +18,7 @@
 #include "picload.h"
 #endif
 
+#if !defined(__AROS__)
 extern "AMIGA" KeyfileBase
 {
 	void keyGetInfo(char*, ULONG*) = -0x1e;
@@ -25,5 +26,7 @@ extern "AMIGA" KeyfileBase
 	BOOL keyDecodeKeyfile2() = -0x2a;
 	BOOL keyWritePicture(char*, PICTURE*, char *) = -0x30;
 }
-
+#else
+#include "proto/keyfile.h"
+#endif
 #endif
