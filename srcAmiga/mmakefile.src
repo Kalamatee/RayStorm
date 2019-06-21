@@ -4,7 +4,10 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- local-raystorm : raystorm-mui
 #MM- raystorm-mui : raystorm-renderer raystorm-scenario
-#MM raystorm-renderer : raystorm-libraries-keyfile-includes raystorm-libraries-rsi-includes
+#MM raystorm-renderer : raystorm-linklibs raystorm-libraries-keyfile-includes raystorm-libraries-rsi-includes
+
+#MM- local-raystorm-quick : raystorm-mui-quick
+#MM- raystorm-mui-quick : raystorm-renderer-quick raystorm-scenario-quick
 
 RAYSTORM_DIR := $(AROSDIR)/RayStorm
 

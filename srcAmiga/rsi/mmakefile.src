@@ -3,18 +3,47 @@
 include $(SRCDIR)/config/aros.cfg
 
 #MM- raystorm-libraries : raystorm-libraries-rsi
+#MM- raystorm-linklibs : raystorm-libraries-rsi-linklib
 
 RAYSTORM_DIR := $(AROSDIR)/RayStorm
 RAYSTORM_LIBDIR := $(RAYSTORM_DIR)/Libs
 
 RAYSTORM_FILES := \
-
+    actor \
+    box \
+    brush \
+    camera \
+    cone \
+    context \
+    csg \
+    cylinder \
+    flares \
+    global \
+    htexture \
+    light \
+    list \
+    object \
+    objhand \
+    octree \
+    param \
+    plane \
+    polysolv \
+    rsi \
+    sor \
+    sphere \
+    star \
+    stats \
+    surface \
+    texture \
+    triangle \
+    voxel \
+    world
 
 USER_LDFLAGS := -static
 
 %build_module mmake=raystorm-libraries-rsi \
   modname=raystorm modtype=library \
-  files="$(RAYSTORM_FILES)" \
+  cxxfiles="$(RAYSTORM_FILES)" \
   moduledir="$(RAYSTORM_LIBDIR)" \
   includedir="$(GENDIR)/$(CURDIR)/../include" \
   libdir="$(GENDIR)/$(CURDIR)/../lib"

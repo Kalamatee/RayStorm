@@ -61,7 +61,7 @@
 struct Library *RayStormBase = NULL;
 
 // Application errors
-char *app_errors[] =
+const char *app_errors[] =
 {
 	"Wrong screen resolution",
 	"Not enough memory",
@@ -187,7 +187,7 @@ char *InitInterface()
 	err = rsiInit();
 #endif
 	if(err)
-		return app_errors[ERROR_INITIALIZE-100];
+		return (char *)app_errors[ERROR_INITIALIZE-100];
 
 #if defined(__PPC__) && defined(LIB_ARG)
 	err = rsiCreateContext(RayStormBase, &rc);
@@ -195,7 +195,7 @@ char *InitInterface()
 	err = rsiCreateContext(&rc);
 #endif
 	if(err)
-		return app_errors[ERROR_INITIALIZE-100];
+		return (char *)app_errors[ERROR_INITIALIZE-100];
 
 	err = rsiSetLogCB(CTXT, WriteLogInterface);
 	if(err)
@@ -311,7 +311,7 @@ static BOOL read_color(rsiCOLOR *c, char *s)
 	return TRUE;
 }
 
-ULONG triangle(ULONG *arg)
+ULONG triangle(IPTR *arg)
 {
 	void *surf,*actor=NULL;
 	int i;
@@ -356,7 +356,7 @@ ULONG triangle(ULONG *arg)
 			rsiTTriangleActor, actor, rsiTDone);
 }
 
-ULONG newsurface(ULONG *arg)
+ULONG newsurface(IPTR *arg)
 {
 	int flags = 0;
 	rsiResult err;
@@ -376,7 +376,7 @@ ULONG newsurface(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG setcamera(ULONG *arg)
+ULONG setcamera(IPTR *arg)
 {
 	rsiVECTOR pos,vec,vup;
 	void *actor;
@@ -488,7 +488,7 @@ ULONG setcamera(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG setscreen(ULONG *arg)
+ULONG setscreen(IPTR *arg)
 {
 #ifdef QUANT
 	colors = *(LONG*)arg[2];
@@ -497,7 +497,7 @@ ULONG setscreen(ULONG *arg)
 	return rsiSetScreen(CTXT, (int)*(LONG*)arg[0],(int)*(LONG*)arg[1]);
 }
 
-ULONG pointlight(ULONG *arg)
+ULONG pointlight(IPTR *arg)
 {
 	rsiVECTOR vec;
 	rsiCOLOR color;
@@ -578,7 +578,7 @@ ULONG pointlight(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG spotlight(ULONG *arg)
+ULONG spotlight(IPTR *arg)
 {
 	rsiVECTOR vec;
 	rsiCOLOR color;
@@ -695,7 +695,7 @@ ULONG spotlight(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG directionallight(ULONG *arg)
+ULONG directionallight(IPTR *arg)
 {
 	rsiVECTOR vec;
 	rsiCOLOR color;
@@ -782,7 +782,7 @@ ULONG directionallight(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG flare(ULONG *arg)
+ULONG flare(IPTR *arg)
 {
 	rsiResult err;
 	rsiCOLOR color;
@@ -882,7 +882,7 @@ ULONG flare(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG star(ULONG *arg)
+ULONG star(IPTR *arg)
 {
 	rsiResult err;
 	void *star;
@@ -1051,7 +1051,7 @@ ULONG star(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG sphere(ULONG *arg)
+ULONG sphere(IPTR *arg)
 {
 	rsiVECTOR vec;
 	float fnum;
@@ -1112,7 +1112,7 @@ ULONG sphere(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG plane(ULONG *arg)
+ULONG plane(IPTR *arg)
 {
 	rsiVECTOR vec;
 	void *plane,*surf,*actor;
@@ -1158,7 +1158,7 @@ ULONG plane(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG box(ULONG *arg)
+ULONG box(IPTR *arg)
 {
 	rsiVECTOR vec;
 	void *box,*surf,*actor;
@@ -1235,7 +1235,7 @@ ULONG box(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG cylinder(ULONG *arg)
+ULONG cylinder(IPTR *arg)
 {
 	rsiVECTOR vec;
 	void *cylinder,*surf,*actor;
@@ -1310,7 +1310,7 @@ ULONG cylinder(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG sor(ULONG *arg)
+ULONG sor(IPTR *arg)
 {
 	rsiVECTOR vec;
 	void *sor,*surf,*actor;
@@ -1415,7 +1415,7 @@ ULONG sor(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG cone(ULONG *arg)
+ULONG cone(IPTR *arg)
 {
 	rsiVECTOR vec;
 	void *cone,*surf,*actor;
@@ -1487,7 +1487,7 @@ ULONG cone(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG csg(ULONG *arg)
+ULONG csg(IPTR *arg)
 {
 	int operation;
 	void *csg;
@@ -1535,7 +1535,7 @@ ULONG csg(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG loadobj(ULONG *arg)
+ULONG loadobj(IPTR *arg)
 {
 	rsiVECTOR pos = {0.,0.,0.}, align = {0.,0.,0.}, scale = {1.,1.,1.};
 	void *surf=NULL,*actor=NULL;
@@ -1577,7 +1577,7 @@ ULONG loadobj(ULONG *arg)
 		rsiTDone);
 }
 
-ULONG setworld(ULONG *arg)
+ULONG setworld(IPTR *arg)
 {
 	rsiCOLOR color;
 	float fnum;
@@ -1650,7 +1650,7 @@ ULONG setworld(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG ambient(ULONG *arg)
+ULONG ambient(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1663,7 +1663,7 @@ ULONG ambient(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfAmbient,&color,rsiTDone);
 }
 
-ULONG diffuse(ULONG *arg)
+ULONG diffuse(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1676,7 +1676,7 @@ ULONG diffuse(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfDiffuse,&color,rsiTDone);
 }
 
-ULONG foglen(ULONG *arg)
+ULONG foglen(IPTR *arg)
 {
 	float fnum;
 
@@ -1688,7 +1688,7 @@ ULONG foglen(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfFoglen,fnum,rsiTDone);
 }
 
-ULONG specular(ULONG *arg)
+ULONG specular(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1701,7 +1701,7 @@ ULONG specular(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfSpecular,&color,rsiTDone);
 }
 
-ULONG difftrans(ULONG *arg)
+ULONG difftrans(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1714,7 +1714,7 @@ ULONG difftrans(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfDifftrans,&color,rsiTDone);
 }
 
-ULONG spectrans(ULONG *arg)
+ULONG spectrans(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1727,7 +1727,7 @@ ULONG spectrans(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfSpectrans,&color,rsiTDone);
 }
 
-ULONG refexp(ULONG *arg)
+ULONG refexp(IPTR *arg)
 {
 	float fnum;
 
@@ -1739,7 +1739,7 @@ ULONG refexp(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfRefexp,fnum,rsiTDone);
 }
 
-ULONG transexp(ULONG *arg)
+ULONG transexp(IPTR *arg)
 {
 	float fnum;
 
@@ -1751,7 +1751,7 @@ ULONG transexp(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfTransexp,fnum,rsiTDone);
 }
 
-ULONG refrindex(ULONG *arg)
+ULONG refrindex(IPTR *arg)
 {
 	float fnum;
 
@@ -1763,7 +1763,7 @@ ULONG refrindex(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfRefrindex,fnum,rsiTDone);
 }
 
-ULONG reflect(ULONG *arg)
+ULONG reflect(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1776,7 +1776,7 @@ ULONG reflect(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfReflect,&color,rsiTDone);
 }
 
-ULONG transpar(ULONG *arg)
+ULONG transpar(IPTR *arg)
 {
 	rsiCOLOR color;
 
@@ -1789,7 +1789,7 @@ ULONG transpar(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfTranspar,&color,rsiTDone);
 }
 
-ULONG transluc(ULONG *arg)
+ULONG transluc(IPTR *arg)
 {
 	float fnum;
 
@@ -1801,7 +1801,7 @@ ULONG transluc(ULONG *arg)
 	return rsiSetSurface(CTXT, surf->item,rsiTSurfTransluc,fnum,rsiTDone);
 }
 
-ULONG imtexture(ULONG *arg)
+ULONG imtexture(IPTR *arg)
 {
 	void *texture, *actor;
 	rsiVECTOR vec;
@@ -1867,7 +1867,7 @@ ULONG imtexture(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG hypertexture(ULONG *arg)
+ULONG hypertexture(IPTR *arg)
 {
 	void *texture, *actor;
 	rsiVECTOR vec;
@@ -1951,7 +1951,7 @@ ULONG hypertexture(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG brush(ULONG *arg)
+ULONG brush(IPTR *arg)
 {
 	void *brush,*actor;
 	rsiVECTOR vec;
@@ -2036,7 +2036,7 @@ ULONG brush(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG savepic(ULONG *arg)
+ULONG savepic(IPTR *arg)
 {
 	rsiResult err;
 
@@ -2053,7 +2053,7 @@ ULONG savepic(ULONG *arg)
 }
 
 #ifdef QUANT
-ULONG display(ULONG *arg)
+ULONG display(IPTR *arg)
 {
 	display((BOOL)arg[0]);
 
@@ -2061,11 +2061,12 @@ ULONG display(ULONG *arg)
 }
 #endif
 
-ULONG cleanup(ULONG *arg)
+ULONG cleanup(IPTR *arg)
 {
+	const char *clnstr = "Cleanup";
 	rsiResult err;
 
-	WriteLog(rc, "Cleanup");
+	WriteLog(rc, (char *)clnstr);
 
 	err = rsiCleanup(CTXT);
 	if(err)
@@ -2089,7 +2090,7 @@ ULONG cleanup(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG startrender(ULONG *arg)
+ULONG startrender(IPTR *arg)
 {
 	rsiResult err;
 	int flags = 0;
@@ -2162,7 +2163,7 @@ ULONG startrender(ULONG *arg)
 	return rsiRender(CTXT, &scr,rsiTRenderFlags,flags,rsiTRenderTimeBegin,begin,rsiTRenderTimeEnd,end,rsiTDone);
 }
 
-ULONG antialias(ULONG *arg)
+ULONG antialias(IPTR *arg)
 {
 	rsiCOLOR color;
 	float fnum;
@@ -2198,22 +2199,22 @@ ULONG antialias(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG brushpath(ULONG *arg)
+ULONG brushpath(IPTR *arg)
 {
 	return rsiSetBrushPath(CTXT, (char*)arg[0]);
 }
 
-ULONG texturepath(ULONG *arg)
+ULONG texturepath(IPTR *arg)
 {
 	return rsiSetTexturePath(CTXT, (char*)arg[0]);
 }
 
-ULONG objectpath(ULONG *arg)
+ULONG objectpath(IPTR *arg)
 {
 	return rsiSetObjectPath(CTXT, (char*)arg[0]);
 }
 
-ULONG newactor(ULONG *arg)
+ULONG newactor(IPTR *arg)
 {
 	rsiVECTOR vec;
 	void *act;
@@ -2254,7 +2255,7 @@ ULONG newactor(ULONG *arg)
 	return rsiERR_NONE;
 }
 
-ULONG position(ULONG *arg)
+ULONG position(IPTR *arg)
 {
 	rsiVECTOR vec;
 	float begin,end;
@@ -2283,7 +2284,7 @@ ULONG position(ULONG *arg)
 	return rsiPosition(CTXT, actor->item,begin,end,&vec,/*rsiTPosFlags,flags,*/rsiTDone);
 }
 
-ULONG alignment(ULONG *arg)
+ULONG alignment(IPTR *arg)
 {
 	rsiVECTOR vec;
 	float begin,end;
@@ -2313,7 +2314,7 @@ ULONG alignment(ULONG *arg)
 	return rsiAlignment(CTXT, actor->item,begin,end,&vec,/*rsiTAlignFlags,flags,*/rsiTDone);
 }
 
-ULONG size(ULONG *arg)
+ULONG size(IPTR *arg)
 {
 	rsiVECTOR vec;
 	float begin,end;
@@ -2342,7 +2343,7 @@ ULONG size(ULONG *arg)
 	return rsiSize(CTXT, actor->item,begin,end,&vec,/*rsiTSizeFlags,flags,*/rsiTDone);
 }
 
-ULONG distrib(ULONG *arg)
+ULONG distrib(IPTR *arg)
 {
 	int motion,soft;
 
@@ -2357,7 +2358,7 @@ ULONG distrib(ULONG *arg)
 	return rsiSetDistribution(CTXT, motion, soft);
 }
 
-ULONG geterrorstr(ULONG *arg)
+ULONG geterrorstr(IPTR *arg)
 {
 	rsiResult err;
 
